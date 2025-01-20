@@ -1,10 +1,12 @@
 import express from 'express';
+import app from './app';
+import config from '@/config/env';
 
-const app = express();
-const port = process.env.PORT;
+const main = express();
+main.use('/api', app);
 
-app.use(express.json());
+const port = config.port;
 
-app.listen(port, () => {
+main.listen(port, () => {
     console.log(`server is running at http://localhost:${port}`);
 });
