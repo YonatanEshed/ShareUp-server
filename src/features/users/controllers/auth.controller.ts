@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserService } from '../services/user.service';
+import UserService from '../services/user.service';
 import { generateToken } from '../utils/jwt.util';
 import { comparePasswords, hashPassword } from '../utils/auth.util';
 

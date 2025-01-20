@@ -1,14 +1,14 @@
 import { getRepository } from 'fireorm';
 import User from '../models/user.model';
 
-export class UserService {
-    private static userRepository = getRepository(User);
+class UserService {
+    private userRepository = getRepository(User);
 
-    static async getUserById(id: string): Promise<User | null> {
+    async getUserById(id: string): Promise<User | null> {
         return await this.userRepository.findById(id);
     }
 
-    static async getUserByEmail(email: string): Promise<User | null> {
+    async getUserByEmail(email: string): Promise<User | null> {
         const users = await this.userRepository
             .whereEqualTo('email', email)
             .find();
@@ -17,7 +17,7 @@ export class UserService {
         return users[0];
     }
 
-    static async createUser(
+    async createUser(
         username: string,
         email: string,
         password: string
@@ -30,10 +30,7 @@ export class UserService {
         return this.userRepository.create(user);
     }
 
-    static async updateUser(
-        id: string,
-        updates: Partial<User>
-    ): Promise<User | null> {
+    async updateUser(id: string, updates: Partial<User>): Promise<User | null> {
         const user = await this.userRepository.findById(id);
 
         if (!user) return null;
@@ -42,7 +39,7 @@ export class UserService {
         return await this.userRepository.update(user);
     }
 
-    static async deleteUser(id: string): Promise<boolean> {
+    async deleteUser(id: string): Promise<boolean> {
         const user = await this.getUserById(id);
         if (!user) return false;
 
@@ -50,7 +47,7 @@ export class UserService {
         return true;
     }
 
-    static async isEmailTaken(email: string): Promise<boolean> {
+    async isEmailTaken(email: string): Promise<boolean> {
         const existingUsers = await this.userRepository
             .whereEqualTo('email', email)
             .find();
@@ -58,3 +55,5 @@ export class UserService {
         return existingUsers.length > 0;
     }
 }
+
+export default new UserService();

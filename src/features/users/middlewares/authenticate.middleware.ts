@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '@/config/env';
-import { UserService } from '../services/user.service';
+import { JwtPayload } from 'jsonwebtoken';
+import UserService from '../services/user.service';
 import { verifyToken } from '../utils/jwt.util';
 
 export const authenticate = async (
