@@ -1,5 +1,5 @@
 import { getRepository } from 'fireorm';
-import User from '../models/user.model';
+import User, { Profile } from '../models/user.model';
 
 class UserService {
     private userRepository = getRepository(User);
@@ -30,21 +30,9 @@ class UserService {
         return this.userRepository.create(user);
     }
 
-    async updateUser(id: string, updates: Partial<User>): Promise<User | null> {
-        const user = await this.userRepository.findById(id);
-
-        if (!user) return null;
-
+    async updateUser(user: User, updates: Partial<User>): Promise<User | null> {
         Object.assign(user, updates);
         return await this.userRepository.update(user);
-    }
-
-    async deleteUser(id: string): Promise<boolean> {
-        const user = await this.getUserById(id);
-        if (!user) return false;
-
-        await this.userRepository.delete(id);
-        return true;
     }
 
     async isEmailTaken(email: string): Promise<boolean> {
@@ -53,6 +41,11 @@ class UserService {
             .find();
 
         return existingUsers.length > 0;
+    }
+
+    getUserProfile(user: User): Profile {
+        const { email, password, ...profile } = user;
+        return profile;
     }
 }
 

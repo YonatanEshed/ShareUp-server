@@ -1,9 +1,10 @@
-import bodyParser from 'body-parser';
 import express from 'express';
 
 import './config/firebase'; // Ensure FireORM is initialized
 
 import routerAuth from './features/users/routes/auth.routes';
+import routerProfile from './features/users/routes/profile.routes';
+import { authenticate } from './features/users/middlewares/authenticate.middleware';
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', routerAuth);
-// app.use('/users', userRoutes);
+app.use('/profile', authenticate, routerProfile);
 // app.use('/posts', postRoutes);
 // app.use('/chat', chatRoutes);
 

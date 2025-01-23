@@ -18,4 +18,7 @@ class User {
     }
 }
 
+interface Profile extends Omit<User, 'email' | 'password'> {}
+
 export default User;
+export { Profile };
