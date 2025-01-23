@@ -8,7 +8,7 @@ const config = {
     auth: {
         jwt_secret: process.env.JWT_SECRET || 'jwt secret',
         password_secret: process.env.PASSWORD_SECRET || 'password secret',
-        jwt_duration: '2m',
+        jwt_duration: '60d',
     },
 };
 
