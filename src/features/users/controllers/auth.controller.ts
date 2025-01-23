@@ -10,8 +10,6 @@ export const register = async (req: Request, res: Response) => {
         if (await UserService.isEmailTaken(email))
             return res.status(400).json({ message: 'Email is already taken.' });
 
-        console.log('not taken');
-
         const hashedPassword = hashPassword(password);
         const user = await UserService.createUser(
             username,
@@ -21,7 +19,7 @@ export const register = async (req: Request, res: Response) => {
 
         const token = generateToken({ userId: user.id });
 
-        return res.status(200).json({ user, token });
+        return res.status(200).json({ token });
     } catch (error) {
         return res.status(500).json({ message: 'Server error', error });
     }
