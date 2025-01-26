@@ -4,6 +4,7 @@ import {
     getProfile,
     updateProfile,
 } from '../controllers/profile.controller';
+import { validateUserId } from '../middlewares/user.middleware';
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.put('/', updateProfile); // update profile
 router.put('/profilePicture'); // update profile picture
 router.get('/', getOwnProfile); // get own user profile
 
-router.get('/:userId', getProfile); // get user's profile
+router.get('/:userId', validateUserId, getProfile); // get user's profile
 
 router.post('/:userId/follow'); // follow userId
 router.delete('/:userId/follow'); // unfollow userId
