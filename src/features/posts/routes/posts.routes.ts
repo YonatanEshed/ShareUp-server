@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import multer from 'multer';
+import { upload } from '@/config/multer';
 
 import {
     uploadPost,
@@ -10,7 +10,6 @@ import {
 } from '../controllers/post.controller';
 
 const router = Router();
-const upload = multer({ dest: 'tmp/' }); // Temporary storage for uploaded files
 
 router.post('/', upload.single('file'), uploadPost);
 
