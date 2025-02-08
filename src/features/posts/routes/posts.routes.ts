@@ -13,6 +13,12 @@ import {
     unlikePost,
     getLikesByPostId,
 } from '../controllers/like.controller';
+import {
+    addComment,
+    deleteComment,
+    getCommentsByPost,
+} from '../controllers/comment.controller';
+import { get } from 'http';
 
 const router = Router();
 
@@ -27,5 +33,9 @@ router.get('/user/:userId', getPostsByUser);
 router.post('/:postId/like', likePost);
 router.delete('/:postId/like', unlikePost);
 router.get('/:postId/likes', getLikesByPostId);
+
+router.post('/:postId/comment', addComment);
+router.delete('/:postId/comment/:commentId', deleteComment);
+router.get('/:postId/comments', getCommentsByPost);
 
 export default router;
