@@ -4,6 +4,14 @@ import {
     getProfile,
     updateProfile,
 } from '../controllers/profile.controller';
+import {
+    follow,
+    unfollow,
+    getFollowing,
+    getFollowers,
+    getUserFollowing,
+    getUserFollowers,
+} from '../controllers/follow.controller';
 import { validateUserId } from '../middlewares/user.middleware';
 
 const router = Router();
@@ -15,9 +23,12 @@ router.get('/', getOwnProfile); // get own user profile
 
 router.get('/:userId', validateUserId, getProfile); // get user's profile
 
-router.post('/:userId/follow'); // follow userId
-router.delete('/:userId/follow'); // unfollow userId
-router.get('/:userId/followers'); // get list of userId's followers
-router.get('/:userId/followings'); // get list of userId's followers
+// follow routes
+router.get('/following', getFollowing); // get list of own followings
+router.get('/followers', getFollowers); // get list of own followers
+router.post('/:userId/follow', follow); // follow userId
+router.delete('/:userId/follow', unfollow); // unfollow userId
+router.get('/:userId/following', getUserFollowing); // get list of userId's followings
+router.get('/:userId/followers', getUserFollowers); // get list of userId's followers
 
 export default router;
