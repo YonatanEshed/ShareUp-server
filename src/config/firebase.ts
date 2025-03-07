@@ -4,15 +4,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
-    throw Error('could not get firebase service account from .env file');
-
 // decode firebase service account from .env file
-const serviceAccount = JSON.parse(
-    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString(
-        'utf-8'
-    )
-);
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS || '{}');
 
 const firebaseConfig = {
     credential: admin.credential.cert(serviceAccount),
