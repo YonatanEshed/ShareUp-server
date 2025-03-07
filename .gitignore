@@ -41,3 +41,6 @@ tmp/
 *.swp
 *.DS_Store
 Thumbs.db
+
+
+shareup-firebase-adminsdk.json
