@@ -22,7 +22,10 @@ export const addComment = async (req: Request, res: Response) => {
         );
         return res.status(201).json({ comment });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -52,7 +55,10 @@ export const deleteComment = async (req: Request, res: Response) => {
             .status(200)
             .json({ message: 'Comment deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -81,7 +87,10 @@ export const getCommentsByPost = async (req: Request, res: Response) => {
 
         res.status(200).json(commentsWithUserDetails);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -107,6 +116,9 @@ export const updateComment = async (req: Request, res: Response) => {
         );
         return res.status(200).json({ updatedComment });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };

@@ -42,7 +42,10 @@ export const uploadPost = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -70,7 +73,10 @@ export const getPost = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -96,7 +102,10 @@ export const deletePost = async (req: Request, res: Response) => {
 
         return res.status(200).json({ message: 'Post deleted successfully.' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -133,7 +142,10 @@ export const updatePost = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -164,6 +176,9 @@ export const getPostsByUser = async (req: Request, res: Response) => {
 
         return res.status(200).json({ posts: postsWithUser });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };

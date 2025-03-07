@@ -21,7 +21,9 @@ export const register = async (req: Request, res: Response) => {
 
         return res.status(200).json({ token, userId: user.id });
     } catch (error) {
-        return res.status(500).json({ message: 'Server error', error });
+        return res
+            .status(500)
+            .json({ message: 'Server error', error: (error as Error).message });
     }
 };
 
@@ -43,6 +45,9 @@ export const login = async (req: Request, res: Response) => {
 
         return res.status(200).json({ token, userId: user.id });
     } catch (error) {
-        return res.status(500).json({ message: 'Server error', error }).end();
+        return res
+            .status(500)
+            .json({ message: 'Server error', error: (error as Error).message })
+            .end();
     }
 };

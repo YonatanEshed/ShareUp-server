@@ -25,7 +25,10 @@ export const likePost = async (req: Request, res: Response) => {
         const like = await likeService.likePost(req.user.id, postId);
         return res.status(201).json({ like });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -50,7 +53,10 @@ export const unlikePost = async (req: Request, res: Response) => {
         return res.status(200).json({ message: 'Post unliked successfully' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -74,6 +80,9 @@ export const getLikesByPostId = async (req: Request, res: Response) => {
             userProfiles.filter((profile) => profile !== null)
         );
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
