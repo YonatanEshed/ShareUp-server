@@ -5,6 +5,7 @@ import userService from './user.service';
 
 class FollowService {
     private followRepository = getRepository(Follow);
+    private userRepository = getRepository(User);
 
     async getFollow(followerId: string, followedId: string) {
         const follow = await this.followRepository
