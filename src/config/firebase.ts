@@ -4,25 +4,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
-    throw Error('could not get firebase service account from .env file');
-
 // decode firebase service account from .env file
 const serviceAccount = JSON.parse(
-    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString(
-        'utf-8'
-    )
+    process.env.SHAREUP_FIREBASE_CREDENTIALS || '{}'
 );
 
 const firebaseConfig = {
     credential: admin.credential.cert(serviceAccount),
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+    apiKey: process.env.SHAREUP_FIREBASE_API_KEY,
+    authDomain: process.env.SHAREUP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.SHAREUP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.SHAREUP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.SHAREUP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.SHAREUP_FIREBASE_APP_ID,
+    measurementId: process.env.SHAREUP_FIREBASE_MEASUREMENT_ID,
 };
 
 admin.initializeApp(firebaseConfig);

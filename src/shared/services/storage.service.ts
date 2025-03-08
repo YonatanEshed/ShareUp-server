@@ -1,4 +1,4 @@
-import admin from '@/config/firebase'; // Adjust the path as needed
+import admin from '../../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { URL } from 'url';
 import path from 'path';

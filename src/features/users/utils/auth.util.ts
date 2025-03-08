@@ -1,4 +1,4 @@
-import config from '@/config/env';
+import config from '../../../config/env';
 import * as crypto from 'crypto';
 
 const PASSWORD_SECRET = config.auth.password_secret;

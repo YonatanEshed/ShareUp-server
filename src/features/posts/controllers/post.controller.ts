@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import Post from '../models/post.model';
-import MediaService from '@/shared/services/storage.service';
+import MediaService from '../../../shared/services/storage.service';
 import postService from '../services/post.service';
-import userService from '@/features/users/services/user.service'; // Import user service
+import userService from '../../../features/users/services/user.service';
 
 export const uploadPost = async (req: Request, res: Response) => {
     const { caption } = req.body;

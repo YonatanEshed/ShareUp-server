@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import commentService from '../services/comment.service';
 import postService from '../services/post.service';
-import userService from '@/features/users/services/user.service';
+import userService from '../../../features/users/services/user.service';
 
 export const addComment = async (req: Request, res: Response) => {
     const { postId } = req.params;
