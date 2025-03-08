@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '@/config/multer';
+import { upload } from '../../../config/multer';
 
 import {
     uploadPost,
@@ -18,7 +18,6 @@ import {
     deleteComment,
     getCommentsByPost,
 } from '../controllers/comment.controller';
-import { get } from 'http';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import likeService from '../services/like.service';
 import postService from '../services/post.service';
-import userService from '@/features/users/services/user.service';
+import userService from '../../../features/users/services/user.service';
 
 export const likePost = async (req: Request, res: Response) => {
     const { postId } = req.params;
