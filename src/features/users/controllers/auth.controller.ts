@@ -6,6 +6,12 @@ import { comparePasswords, hashPassword } from '../utils/auth.util';
 export const register = async (req: Request, res: Response) => {
     const { email, username, password } = req.body;
 
+    if (!email || !username || !password) {
+        return res
+            .status(400)
+            .json({ message: 'Email, Username, and Password are required.' });
+    }
+
     try {
         if (await UserService.isEmailTaken(email))
             return res.status(400).json({ message: 'Email is already taken.' });
