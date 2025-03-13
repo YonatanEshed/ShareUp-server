@@ -26,7 +26,7 @@ export const getProfile = async (req: Request, res: Response) => {
 
         const profile = UserService.getUserProfile(user);
 
-        return res.status(200).json({ profile });
+        return res.status(200).json(profile);
     } catch (error) {
         return res
             .status(500)
@@ -58,7 +58,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         const profile = await UserService.getUserProfile(updatedUser);
 
-        return res.status(200).json({ profile });
+        return res.status(200).json(profile);
     } catch (error) {
         return res
             .status(500)

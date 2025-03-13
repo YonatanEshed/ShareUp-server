@@ -32,13 +32,11 @@ export const uploadPost = async (req: Request, res: Response) => {
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = post; // Exclude userId
         return res.status(200).json({
-            post: {
-                ...postWithoutUserId,
-                user: {
-                    id: post.userId,
-                    username: user?.username,
-                    profilePictureURL: user?.profilePicture,
-                },
+            ...postWithoutUserId,
+            user: {
+                id: post.userId,
+                username: user?.username,
+                profilePictureURL: user?.profilePicture,
             },
         });
     } catch (error) {
@@ -63,13 +61,11 @@ export const getPost = async (req: Request, res: Response) => {
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = post; // Exclude userId
         return res.status(200).json({
-            post: {
-                ...postWithoutUserId,
-                user: {
-                    id: post.userId,
-                    username: user?.username,
-                    profilePictureURL: user?.profilePicture,
-                },
+            ...postWithoutUserId,
+            user: {
+                id: post.userId,
+                username: user?.username,
+                profilePictureURL: user?.profilePicture,
             },
         });
     } catch (error) {
@@ -132,13 +128,11 @@ export const updatePost = async (req: Request, res: Response) => {
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = updatedPost as Post; // Exclude userId
         return res.status(200).json({
-            post: {
-                ...postWithoutUserId,
-                user: {
-                    id: post.userId,
-                    username: user?.username,
-                    profilePictureURL: user?.profilePicture,
-                },
+            ...postWithoutUserId,
+            user: {
+                id: post.userId,
+                username: user?.username,
+                profilePictureURL: user?.profilePicture,
             },
         });
     } catch (error) {
@@ -174,7 +168,7 @@ export const getPostsByUser = async (req: Request, res: Response) => {
             };
         });
 
-        return res.status(200).json({ posts: postsWithUser });
+        return res.status(200).json(postsWithUser);
     } catch (error) {
         res.status(500).json({
             message: 'Server error',

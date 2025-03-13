@@ -20,7 +20,7 @@ export const addComment = async (req: Request, res: Response) => {
             postId,
             content
         );
-        return res.status(201).json({ comment });
+        return res.status(201).json(comment);
     } catch (error) {
         res.status(500).json({
             message: 'Server error',
@@ -114,7 +114,7 @@ export const updateComment = async (req: Request, res: Response) => {
             commentId,
             content
         );
-        return res.status(200).json({ updatedComment });
+        return res.status(200).json(updatedComment);
     } catch (error) {
         res.status(500).json({
             message: 'Server error',

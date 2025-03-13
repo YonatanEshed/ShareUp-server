@@ -23,7 +23,7 @@ export const likePost = async (req: Request, res: Response) => {
                 .json({ message: 'You have already liked this post' });
 
         const like = await likeService.likePost(req.user.id, postId);
-        return res.status(201).json({ like });
+        return res.status(201).json(like);
     } catch (error) {
         res.status(500).json({
             message: 'Server error',

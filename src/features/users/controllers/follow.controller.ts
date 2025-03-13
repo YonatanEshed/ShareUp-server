@@ -77,9 +77,9 @@ export const getFollowing = async (req: Request, res: Response) => {
             })
         );
 
-        return res.status(200).json({
-            following: followingProfiles.filter((profile) => profile !== null),
-        });
+        return res
+            .status(200)
+            .json(followingProfiles.filter((profile) => profile !== null));
     } catch (error) {
         return res
             .status(500)
@@ -99,9 +99,9 @@ export const getFollowers = async (req: Request, res: Response) => {
             })
         );
 
-        return res.status(200).json({
-            followers: followerProfiles.filter((profile) => profile !== null),
-        });
+        return res
+            .status(200)
+            .json(followerProfiles.filter((profile) => profile !== null));
     } catch (error) {
         return res
             .status(500)
@@ -121,9 +121,9 @@ export const getUserFollowing = async (req: Request, res: Response) => {
             })
         );
 
-        return res.status(200).json({
-            following: followingProfiles.filter((profile) => profile !== null),
-        });
+        return res
+            .status(200)
+            .json(followingProfiles.filter((profile) => profile !== null));
     } catch (error) {
         return res
             .status(500)
@@ -143,9 +143,9 @@ export const getUserFollowers = async (req: Request, res: Response) => {
             })
         );
 
-        return res.status(200).json({
-            followers: followerProfiles.filter((profile) => profile !== null),
-        });
+        return res
+            .status(200)
+            .json(followerProfiles.filter((profile) => profile !== null));
     } catch (error) {
         return res
             .status(500)
