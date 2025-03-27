@@ -11,7 +11,10 @@ export const follow = async (req: Request, res: Response) => {
         if (req.user.id === userId)
             return res
                 .status(403)
-                .json({ message: 'You cannot follow yourself.' });
+                .json({
+                    isSuccessful: false,
+                    message: 'You cannot follow yourself.',
+                });
 
         const isAlreadyFollowing = await followService.isFollow(
             req.user.id,
@@ -20,18 +23,29 @@ export const follow = async (req: Request, res: Response) => {
         if (isAlreadyFollowing)
             return res
                 .status(400)
-                .json({ message: 'You are already following this user.' });
+                .json({
+                    isSuccessful: false,
+                    message: 'You are already following this user.',
+                });
 
         const follow = await followService.createFollow(req.user.id, userId);
         if (!follow) throw Error('Could not perform follow');
 
         return res
             .status(201)
-            .json({ message: 'Successfully followed the user.' });
+            .json({
+                isSuccessful: true,
+                data: null,
+                message: 'Successfully followed the user',
+            });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .json({
+                isSuccessful: false,
+                message: 'Server error',
+                error: (error as Error).message,
+            });
     }
 };
 
@@ -44,24 +58,38 @@ export const unfollow = async (req: Request, res: Response) => {
         if (req.user.id === userId)
             return res
                 .status(403)
-                .json({ message: 'You cannot unfollow yourself.' });
+                .json({
+                    isSuccessful: false,
+                    message: 'You cannot unfollow yourself.',
+                });
 
         const isFollowing = await followService.isFollow(req.user.id, userId);
         if (!isFollowing)
             return res
                 .status(400)
-                .json({ message: 'You are not following this user.' });
+                .json({
+                    isSuccessful: false,
+                    message: 'You are not following this user.',
+                });
 
         const unfollow = await followService.deleteFollow(req.user.id, userId);
         if (!unfollow) throw Error('Could not perform unfollow');
 
         return res
             .status(200)
-            .json({ message: 'Successfully unfollowed the user.' });
+            .json({
+                isSuccessful: true,
+                data: null,
+                message: 'Successfully unfollowed the user',
+            });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .json({
+                isSuccessful: false,
+                message: 'Server error',
+                error: (error as Error).message,
+            });
     }
 };
 
@@ -77,13 +105,19 @@ export const getFollowing = async (req: Request, res: Response) => {
             })
         );
 
-        return res
-            .status(200)
-            .json(followingProfiles.filter((profile) => profile !== null));
+        return res.status(200).json({
+            isSuccessful: true,
+            data: followingProfiles.filter((profile) => profile !== null),
+            message: 'Following retrieved successfully',
+        });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .json({
+                isSuccessful: false,
+                message: 'Server error',
+                error: (error as Error).message,
+            });
     }
 };
 
@@ -99,13 +133,19 @@ export const getFollowers = async (req: Request, res: Response) => {
             })
         );
 
-        return res
-            .status(200)
-            .json(followerProfiles.filter((profile) => profile !== null));
+        return res.status(200).json({
+            isSuccessful: true,
+            data: followerProfiles.filter((profile) => profile !== null),
+            message: 'Followers retrieved successfully',
+        });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .json({
+                isSuccessful: false,
+                message: 'Server error',
+                error: (error as Error).message,
+            });
     }
 };
 
@@ -121,13 +161,19 @@ export const getUserFollowing = async (req: Request, res: Response) => {
             })
         );
 
-        return res
-            .status(200)
-            .json(followingProfiles.filter((profile) => profile !== null));
+        return res.status(200).json({
+            isSuccessful: true,
+            data: followingProfiles.filter((profile) => profile !== null),
+            message: 'Following retrieved successfully',
+        });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .json({
+                isSuccessful: false,
+                message: 'Server error',
+                error: (error as Error).message,
+            });
     }
 };
 
@@ -143,12 +189,18 @@ export const getUserFollowers = async (req: Request, res: Response) => {
             })
         );
 
-        return res
-            .status(200)
-            .json(followerProfiles.filter((profile) => profile !== null));
+        return res.status(200).json({
+            isSuccessful: true,
+            data: followerProfiles.filter((profile) => profile !== null),
+            message: 'Followers retrieved successfully',
+        });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .json({
+                isSuccessful: false,
+                message: 'Server error',
+                error: (error as Error).message,
+            });
     }
 };
