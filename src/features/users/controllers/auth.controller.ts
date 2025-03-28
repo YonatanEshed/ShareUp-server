@@ -9,12 +9,17 @@ export const register = async (req: Request, res: Response) => {
     if (!email || !username || !password) {
         return res
             .status(400)
-            .json({ message: 'Email, Username, and Password are required.' });
+            .json({
+                data: null,
+                message: 'Email, Username, and Password are required.',
+            });
     }
 
     try {
         if (await UserService.isEmailTaken(email))
-            return res.status(400).json({ message: 'Email is already taken.' });
+            return res
+                .status(400)
+                .json({ data: null, message: 'Email is already taken.' });
 
         const hashedPassword = hashPassword(password);
         const user = await UserService.createUser(
@@ -25,11 +30,18 @@ export const register = async (req: Request, res: Response) => {
 
         const token = generateToken({ userId: user.id });
 
-        return res.status(200).json({ token, userId: user.id });
-    } catch (error) {
         return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .status(200)
+            .json({
+                data: { token, userId: user.id },
+                message: 'Registration successful',
+            });
+    } catch (error) {
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -39,27 +51,34 @@ export const login = async (req: Request, res: Response) => {
     if (!email || !password) {
         return res
             .status(400)
-            .json({ message: 'Email and Password are required.' });
+            .json({ data: null, message: 'Email and Password are required.' });
     }
 
     try {
         const user = await UserService.getUserByEmail(email);
 
         if (!user || !comparePasswords(password, user.password)) {
-            return res.status(400).json({ message: 'Wrong Email or Password' });
-        }
-
-        if (!comparePasswords(password, user.password)) {
-            return res.status(400).json({ message: 'Wrong Email or Password' });
+            return res
+                .status(400)
+                .json({ data: null, message: 'Wrong Email or Password' });
         }
 
         const token = generateToken({ userId: user.id });
 
-        return res.status(200).json({ token, userId: user.id });
+        return res
+            .status(200)
+            .json({
+                data: { token, userId: user.id },
+                message: 'Login successful',
+            });
     } catch (error) {
         return res
             .status(500)
-            .json({ message: 'Server error', error: (error as Error).message })
+            .json({
+                data: null,
+                message: 'Server error',
+                error: (error as Error).message,
+            })
             .end();
     }
 };
