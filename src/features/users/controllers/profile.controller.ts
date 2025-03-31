@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
+import MediaService from '../../../shared/services/storage.service';
 
 export const getOwnProfile = async (req: Request, res: Response) => {
     try {
@@ -55,10 +56,30 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         if (!req.user) throw Error('An unexpected error accrued');
 
-        const updateData = {
-            username,
-            bio,
-        };
+        let updateData;
+
+        if (req.file) {
+            const profilePicture = await MediaService.uploadMedia(
+                req.file.path,
+                req.user.id,
+                'profile-pictures'
+            );
+
+            // delete current image
+            if (req.user.profilePicture)
+                await MediaService.deleteMedia(req.user.profilePicture);
+
+            updateData = {
+                username,
+                bio,
+                profilePicture,
+            };
+        } else {
+            updateData = {
+                username,
+                bio,
+            };
+        }
 
         const updatedUser = await UserService.updateUser(req.user, updateData);
         if (!updatedUser)
