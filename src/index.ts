@@ -12,4 +12,4 @@ main.use('/api', app);
 //     console.log(`server is running at http://localhost:${port}`);
 // });
 
-export const api = functions.https.onRequest(app);
+export const api = functions.https.onRequest({ region: 'europe-west1' }, app);

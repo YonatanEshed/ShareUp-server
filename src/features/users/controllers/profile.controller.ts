@@ -8,19 +8,13 @@ export const getOwnProfile = async (req: Request, res: Response) => {
 
         return res
             .status(200)
-            .json({
-                isSuccessful: true,
-                data: { profile },
-                message: 'Profile retrieved successfully',
-            });
+            .json({ data: profile, message: 'Profile retrieved successfully' });
     } catch (error) {
-        return res
-            .status(500)
-            .json({
-                isSuccessful: false,
-                message: 'Server error',
-                error: (error as Error).message,
-            });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -31,7 +25,7 @@ export const getProfile = async (req: Request, res: Response) => {
         const user = await UserService.getUserById(userId);
         if (!user)
             return res.status(404).json({
-                isSuccessful: false,
+                data: null,
                 message: 'User with the specified ID does not exist.',
             });
 
@@ -39,19 +33,13 @@ export const getProfile = async (req: Request, res: Response) => {
 
         return res
             .status(200)
-            .json({
-                isSuccessful: true,
-                data: profile,
-                message: 'Profile retrieved successfully',
-            });
+            .json({ data: profile, message: 'Profile retrieved successfully' });
     } catch (error) {
-        return res
-            .status(500)
-            .json({
-                isSuccessful: false,
-                message: 'Server error',
-                error: (error as Error).message,
-            });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -61,7 +49,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     try {
         if (!username && !bio)
             return res.status(400).json({
-                isSuccessful: false,
+                data: null,
                 message: "Missing required fields: 'username', 'bio'.",
             });
 
@@ -82,18 +70,12 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         return res
             .status(200)
-            .json({
-                isSuccessful: true,
-                data: profile,
-                message: 'Profile updated successfully',
-            });
+            .json({ data: profile, message: 'Profile updated successfully' });
     } catch (error) {
-        return res
-            .status(500)
-            .json({
-                isSuccessful: false,
-                message: 'Server error',
-                error: (error as Error).message,
-            });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };

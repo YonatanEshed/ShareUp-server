@@ -11,19 +11,13 @@ export const uploadPost = async (req: Request, res: Response) => {
         if (!req.file) {
             return res
                 .status(400)
-                .json({
-                    isSuccessful: false,
-                    message: 'No media file uploaded',
-                });
+                .json({ data: null, message: 'No media file uploaded' });
         }
 
         if (!caption) {
             return res
                 .status(400)
-                .json({
-                    isSuccessful: false,
-                    message: "'caption' field is required.",
-                });
+                .json({ data: null, message: "'caption' field is required." });
         }
 
         if (!req.user) throw Error('An unexpected error occurred');
@@ -41,7 +35,6 @@ export const uploadPost = async (req: Request, res: Response) => {
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = post; // Exclude userId
         return res.status(200).json({
-            isSuccessful: true,
             data: {
                 ...postWithoutUserId,
                 user: {
@@ -54,7 +47,7 @@ export const uploadPost = async (req: Request, res: Response) => {
         });
     } catch (error) {
         res.status(500).json({
-            isSuccessful: false,
+            data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
@@ -69,14 +62,13 @@ export const getPost = async (req: Request, res: Response) => {
 
         if (!post)
             return res.status(404).json({
-                isSuccessful: false,
+                data: null,
                 message: 'User with the specified ID does not exist.',
             });
 
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = post; // Exclude userId
         return res.status(200).json({
-            isSuccessful: true,
             data: {
                 ...postWithoutUserId,
                 user: {
@@ -89,7 +81,7 @@ export const getPost = async (req: Request, res: Response) => {
         });
     } catch (error) {
         res.status(500).json({
-            isSuccessful: false,
+            data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
@@ -105,13 +97,13 @@ export const deletePost = async (req: Request, res: Response) => {
         if (!post) {
             return res
                 .status(404)
-                .json({ isSuccessful: false, message: 'Post not found.' });
+                .json({ data: null, message: 'Post not found.' });
         }
 
         if (!req.user || post.userId !== req.user.id) {
             return res
                 .status(403)
-                .json({ isSuccessful: false, message: 'Unauthorized action.' });
+                .json({ data: null, message: 'Unauthorized action.' });
         }
 
         if (post.mediaURL) {
@@ -120,14 +112,12 @@ export const deletePost = async (req: Request, res: Response) => {
 
         await postService.deletePost(postId);
 
-        return res.status(200).json({
-            isSuccessful: true,
-            data: null,
-            message: 'Post deleted successfully',
-        });
+        return res
+            .status(200)
+            .json({ data: null, message: 'Post deleted successfully.' });
     } catch (error) {
         res.status(500).json({
-            isSuccessful: false,
+            data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
@@ -144,13 +134,13 @@ export const updatePost = async (req: Request, res: Response) => {
         if (!post) {
             return res
                 .status(404)
-                .json({ isSuccessful: false, message: 'Post not found.' });
+                .json({ data: null, message: 'Post not found.' });
         }
 
         if (!req.user || post.userId !== req.user.id) {
             return res
                 .status(403)
-                .json({ isSuccessful: false, message: 'Unauthorized action.' });
+                .json({ data: null, message: 'Unauthorized action.' });
         }
 
         const updates: Partial<Post> = {};
@@ -161,7 +151,6 @@ export const updatePost = async (req: Request, res: Response) => {
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = updatedPost as Post; // Exclude userId
         return res.status(200).json({
-            isSuccessful: true,
             data: {
                 ...postWithoutUserId,
                 user: {
@@ -173,8 +162,8 @@ export const updatePost = async (req: Request, res: Response) => {
             message: 'Post updated successfully',
         });
     } catch (error) {
-        return res.status(500).json({
-            isSuccessful: false,
+        res.status(500).json({
+            data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
@@ -190,10 +179,7 @@ export const getPostsByUser = async (req: Request, res: Response) => {
         if (!posts.length) {
             return res
                 .status(404)
-                .json({
-                    isSuccessful: false,
-                    message: 'No posts found for this user.',
-                });
+                .json({ data: null, message: 'No posts found for this user.' });
         }
 
         const user = await userService.getUserById(userId);
@@ -210,13 +196,12 @@ export const getPostsByUser = async (req: Request, res: Response) => {
         });
 
         return res.status(200).json({
-            isSuccessful: true,
             data: postsWithUser,
             message: 'Posts retrieved successfully',
         });
     } catch (error) {
         res.status(500).json({
-            isSuccessful: false,
+            data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
