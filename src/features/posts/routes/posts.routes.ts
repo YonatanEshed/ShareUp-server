@@ -18,10 +18,17 @@ import {
     deleteComment,
     getCommentsByPost,
 } from '../controllers/comment.controller';
+import {
+    getLatestPosts,
+    getLatestPostsFromFollowing,
+} from '../controllers/feed.controller';
 
 const router = Router();
 
 router.post('/', upload.single('file'), uploadPost);
+
+router.get('/feed', getLatestPosts);
+router.get('/feed/following', getLatestPostsFromFollowing);
 
 router.get('/:postId', getPost);
 router.patch('/:postId', updatePost);

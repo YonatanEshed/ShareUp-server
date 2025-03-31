@@ -46,6 +46,19 @@ class PostService {
     async getPostsByUserId(userId: string): Promise<Post[]> {
         return await this.PostRepository.whereEqualTo('userId', userId).find();
     }
+
+    async getLatestPosts(): Promise<Post[]> {
+        return await this.PostRepository
+            .orderByDescending('createdAt')
+            .find();
+    }
+
+    async getLatestPostsFromFollowing(followingIds: string[]): Promise<Post[]> {
+        return await this.PostRepository
+            .whereIn('userId', followingIds)
+            .orderByDescending('createdAt')
+            .find();
+    }
 }
 
 export default new PostService();
