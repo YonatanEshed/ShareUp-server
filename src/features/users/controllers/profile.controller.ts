@@ -1,16 +1,21 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
+import MediaService from '../../../shared/services/storage.service';
 
 export const getOwnProfile = async (req: Request, res: Response) => {
     try {
         if (!req.user) throw Error('An unexpected error accrued');
         const profile = UserService.getUserProfile(req.user);
 
-        return res.status(200).json({ profile });
-    } catch (error) {
         return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .status(200)
+            .json({ data: profile, message: 'Profile retrieved successfully' });
+    } catch (error) {
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -21,16 +26,21 @@ export const getProfile = async (req: Request, res: Response) => {
         const user = await UserService.getUserById(userId);
         if (!user)
             return res.status(404).json({
+                data: null,
                 message: 'User with the specified ID does not exist.',
             });
 
         const profile = UserService.getUserProfile(user);
 
-        return res.status(200).json({ profile });
-    } catch (error) {
         return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .status(200)
+            .json({ data: profile, message: 'Profile retrieved successfully' });
+    } catch (error) {
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -40,15 +50,36 @@ export const updateProfile = async (req: Request, res: Response) => {
     try {
         if (!username && !bio)
             return res.status(400).json({
+                data: null,
                 message: "Missing required fields: 'username', 'bio'.",
             });
 
         if (!req.user) throw Error('An unexpected error accrued');
 
-        const updateData = {
-            username,
-            bio,
-        };
+        let updateData;
+
+        if (req.file) {
+            const profilePicture = await MediaService.uploadMedia(
+                req.file.path,
+                req.user.id,
+                'profile-pictures'
+            );
+
+            // delete current image
+            if (req.user.profilePicture)
+                await MediaService.deleteMedia(req.user.profilePicture);
+
+            updateData = {
+                username,
+                bio,
+                profilePicture,
+            };
+        } else {
+            updateData = {
+                username,
+                bio,
+            };
+        }
 
         const updatedUser = await UserService.updateUser(req.user, updateData);
         if (!updatedUser)
@@ -58,10 +89,14 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         const profile = await UserService.getUserProfile(updatedUser);
 
-        return res.status(200).json({ profile });
-    } catch (error) {
         return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+            .status(200)
+            .json({ data: profile, message: 'Profile updated successfully' });
+    } catch (error) {
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };

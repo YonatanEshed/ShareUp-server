@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { upload } from '../../../config/multer';
+
 import {
     getOwnProfile,
     getProfile,
@@ -17,7 +19,7 @@ import { validateUserId } from '../middlewares/user.middleware';
 const router = Router();
 
 // based on req.user
-router.put('/', updateProfile); // update profile
+router.put('/', upload.single('file'), updateProfile); // update profile
 router.put('/profilePicture'); // update profile picture
 router.get('/', getOwnProfile); // get own user profile
 

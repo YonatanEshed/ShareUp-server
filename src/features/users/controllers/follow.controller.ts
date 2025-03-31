@@ -11,27 +11,30 @@ export const follow = async (req: Request, res: Response) => {
         if (req.user.id === userId)
             return res
                 .status(403)
-                .json({ message: 'You cannot follow yourself.' });
+                .json({ data: null, message: 'You cannot follow yourself.' });
 
         const isAlreadyFollowing = await followService.isFollow(
             req.user.id,
             userId
         );
         if (isAlreadyFollowing)
-            return res
-                .status(400)
-                .json({ message: 'You are already following this user.' });
+            return res.status(400).json({
+                data: null,
+                message: 'You are already following this user.',
+            });
 
         const follow = await followService.createFollow(req.user.id, userId);
         if (!follow) throw Error('Could not perform follow');
 
         return res
             .status(201)
-            .json({ message: 'Successfully followed the user.' });
+            .json({ data: follow, message: 'Successfully followed the user.' });
     } catch (error) {
-        return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -44,24 +47,27 @@ export const unfollow = async (req: Request, res: Response) => {
         if (req.user.id === userId)
             return res
                 .status(403)
-                .json({ message: 'You cannot unfollow yourself.' });
+                .json({ data: null, message: 'You cannot unfollow yourself.' });
 
         const isFollowing = await followService.isFollow(req.user.id, userId);
         if (!isFollowing)
-            return res
-                .status(400)
-                .json({ message: 'You are not following this user.' });
+            return res.status(400).json({
+                data: null,
+                message: 'You are not following this user.',
+            });
 
         const unfollow = await followService.deleteFollow(req.user.id, userId);
         if (!unfollow) throw Error('Could not perform unfollow');
 
         return res
             .status(200)
-            .json({ message: 'Successfully unfollowed the user.' });
+            .json({ data: null, message: 'Successfully unfollowed the user.' });
     } catch (error) {
-        return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -78,12 +84,15 @@ export const getFollowing = async (req: Request, res: Response) => {
         );
 
         return res.status(200).json({
-            following: followingProfiles.filter((profile) => profile !== null),
+            data: followingProfiles.filter((profile) => profile !== null),
+            message: 'Following retrieved successfully',
         });
     } catch (error) {
-        return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -100,12 +109,15 @@ export const getFollowers = async (req: Request, res: Response) => {
         );
 
         return res.status(200).json({
-            followers: followerProfiles.filter((profile) => profile !== null),
+            data: followerProfiles.filter((profile) => profile !== null),
+            message: 'Followers retrieved successfully',
         });
     } catch (error) {
-        return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -122,12 +134,15 @@ export const getUserFollowing = async (req: Request, res: Response) => {
         );
 
         return res.status(200).json({
-            following: followingProfiles.filter((profile) => profile !== null),
+            data: followingProfiles.filter((profile) => profile !== null),
+            message: 'User following retrieved successfully',
         });
     } catch (error) {
-        return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };
 
@@ -144,11 +159,14 @@ export const getUserFollowers = async (req: Request, res: Response) => {
         );
 
         return res.status(200).json({
-            followers: followerProfiles.filter((profile) => profile !== null),
+            data: followerProfiles.filter((profile) => profile !== null),
+            message: 'User followers retrieved successfully',
         });
     } catch (error) {
-        return res
-            .status(500)
-            .json({ message: 'Server error', error: (error as Error).message });
+        return res.status(500).json({
+            data: null,
+            message: 'Server error',
+            error: (error as Error).message,
+        });
     }
 };

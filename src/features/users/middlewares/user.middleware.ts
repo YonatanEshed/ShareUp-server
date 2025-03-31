@@ -16,6 +16,6 @@ export const validateUserId = async (
     } catch (error) {
         return res
             .status(404)
-            .json({ message: 'Target user not found:' + userId });
+            .json({ data: null, message: 'Target user not found: ' + userId });
     }
 };
