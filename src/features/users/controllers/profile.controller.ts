@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
 import MediaService from '../../../shared/services/storage.service';
+import FollowService from '../services/follow.service';
 
 export const getProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -15,9 +16,15 @@ export const getProfile = async (req: Request, res: Response) => {
 
         const profile = UserService.getUserProfile(user);
 
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile retrieved successfully' });
+        // Check if the requesting user follows the profile user
+        const isFollowedByYou = req.user
+            ? await FollowService.isFollow(req.user.id, userId)
+            : false;
+
+        return res.status(200).json({
+            data: { ...profile, isFollowedByYou },
+            message: 'Profile retrieved successfully',
+        });
     } catch (error) {
         return res.status(500).json({
             data: null,
