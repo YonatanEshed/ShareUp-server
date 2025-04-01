@@ -2,23 +2,6 @@ import { Request, Response } from 'express';
 import UserService from '../services/user.service';
 import MediaService from '../../../shared/services/storage.service';
 
-export const getOwnProfile = async (req: Request, res: Response) => {
-    try {
-        if (!req.user) throw Error('An unexpected error accrued');
-        const profile = UserService.getUserProfile(req.user);
-
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile retrieved successfully' });
-    } catch (error) {
-        return res.status(500).json({
-            data: null,
-            message: 'Server error',
-            error: (error as Error).message,
-        });
-    }
-};
-
 export const getProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
