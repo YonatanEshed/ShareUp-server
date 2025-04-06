@@ -3,7 +3,7 @@ import Post from '../models/post.model';
 import MediaService from '../../../shared/services/storage.service';
 import postService from '../services/post.service';
 import userService from '../../../features/users/services/user.service';
-import FollowService from '../../users/services/follow.service';
+import likeService from '../services/like.service';
 
 export const uploadPost = async (req: Request, res: Response) => {
     const { caption } = req.body;
@@ -67,6 +67,10 @@ export const getPost = async (req: Request, res: Response) => {
             });
 
         const user = await userService.getUserById(post.userId);
+        const isLiked = req.user
+            ? await likeService.isLiked(req.user.id, postId)
+            : false;
+
         const { userId, ...postWithoutUserId } = post; // Exclude userId
         return res.status(200).json({
             data: {
@@ -76,6 +80,7 @@ export const getPost = async (req: Request, res: Response) => {
                     username: user?.username,
                     profilePictureURL: user?.profilePicture,
                 },
+                isLiked,
             },
             message: 'Post retrieved successfully',
         });
