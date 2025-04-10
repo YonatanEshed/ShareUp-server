@@ -37,7 +37,7 @@ export const updateProfile = async (req: Request, res: Response) => {
                 message: "Missing required fields: 'username', 'bio'.",
             });
 
-        if (!req.user) throw Error('An unexpected error accrued');
+        if (!req.user) throw Error('An unexpected error occurred');
 
         let updateData;
 
@@ -67,7 +67,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         const updatedUser = await UserService.updateUser(req.user, updateData);
         if (!updatedUser)
             throw Error(
-                "Failed to update the user's profile. Please try again later.Failed to update the user's profile. Please try again later."
+                "Failed to update the user's profile. Please try again later."
             );
 
         const profile = await UserService.getUserProfile(updatedUser);
