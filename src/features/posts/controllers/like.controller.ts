@@ -64,7 +64,6 @@ export const unlikePost = async (req: Request, res: Response) => {
             .status(200)
             .json({ data: null, message: 'Post unliked successfully' });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             data: null,
             message: 'Server error',
