@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/user.service';
 import MediaService from '../../../shared/services/storage.service';
 
@@ -27,15 +27,21 @@ export const getProfile = async (req: Request, res: Response) => {
     }
 };
 
-export const updateProfile = async (req: Request, res: Response) => {
+export const updateProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     const { username, bio } = req.body;
 
     try {
-        if (!username && !bio)
-            return res.status(400).json({
+        if (!username && !bio) {
+            res.status(400).json({
                 data: null,
                 message: "Missing required fields: 'username', 'bio'.",
             });
+            return next();
+        }
 
         if (!req.user) throw Error('An unexpected error occurred');
 
@@ -72,14 +78,17 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         const profile = await UserService.getUserProfile(updatedUser);
 
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile updated successfully' });
+        res.status(200).json({
+            data: profile,
+            message: 'Profile updated successfully',
+        });
+        return next();
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
+        return next();
     }
 };

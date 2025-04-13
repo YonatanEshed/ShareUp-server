@@ -1,23 +1,31 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Post from '../models/post.model';
 import MediaService from '../../../shared/services/storage.service';
 import postService from '../services/post.service';
 import userService from '../../../features/users/services/user.service';
 import likeService from '../services/like.service';
 
-export const uploadPost = async (req: Request, res: Response) => {
+export const uploadPost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     const { caption } = req.body;
     try {
         if (!req.file) {
-            return res
-                .status(400)
-                .json({ data: null, message: 'No media file uploaded' });
+            res.status(400).json({
+                data: null,
+                message: 'No media file uploaded',
+            });
+            return next();
         }
 
         if (!caption) {
-            return res
-                .status(400)
-                .json({ data: null, message: "'caption' field is required." });
+            res.status(400).json({
+                data: null,
+                message: "'caption' field is required.",
+            });
+            return next();
         }
 
         if (!req.user) throw Error('An unexpected error occurred');
@@ -34,7 +42,7 @@ export const uploadPost = async (req: Request, res: Response) => {
 
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = post; // Exclude userId
-        return res.status(200).json({
+        res.status(200).json({
             data: {
                 ...postWithoutUserId,
                 user: {
@@ -45,12 +53,14 @@ export const uploadPost = async (req: Request, res: Response) => {
             },
             message: 'Post uploaded successfully',
         });
+        return next();
     } catch (error) {
         res.status(500).json({
             data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
+        return next();
     }
 };
 
