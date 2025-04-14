@@ -28,7 +28,7 @@ export const follow = async (req: Request, res: Response) => {
 
         return res
             .status(201)
-            .json({ data: follow, message: 'Successfully followed the user.' });
+            .json({ data: true, message: 'Successfully followed the user.' });
     } catch (error) {
         return res.status(500).json({
             data: null,
@@ -61,7 +61,7 @@ export const unfollow = async (req: Request, res: Response) => {
 
         return res
             .status(200)
-            .json({ data: null, message: 'Successfully unfollowed the user.' });
+            .json({ data: true, message: 'Successfully unfollowed the user.' });
     } catch (error) {
         return res.status(500).json({
             data: null,
