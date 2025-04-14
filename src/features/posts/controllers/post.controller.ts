@@ -48,7 +48,7 @@ export const uploadPost = async (
                 user: {
                     id: post.userId,
                     username: user?.username,
-                    profilePictureURL: user?.profilePicture,
+                    profilePicture: user?.profilePicture,
                 },
             },
             message: 'Post uploaded successfully',
@@ -88,7 +88,7 @@ export const getPost = async (req: Request, res: Response) => {
                 user: {
                     id: post.userId,
                     username: user?.username,
-                    profilePictureURL: user?.profilePicture,
+                    profilePicture: user?.profilePicture,
                 },
                 isLiked,
             },
@@ -171,7 +171,7 @@ export const updatePost = async (req: Request, res: Response) => {
                 user: {
                     id: post.userId,
                     username: user?.username,
-                    profilePictureURL: user?.profilePicture,
+                    profilePicture: user?.profilePicture,
                 },
             },
             message: 'Post updated successfully',
@@ -205,7 +205,7 @@ export const getPostsByUser = async (req: Request, res: Response) => {
                 user: {
                     id: userId,
                     username: user?.username,
-                    profilePictureURL: user?.profilePicture,
+                    profilePicture: user?.profilePicture,
                 },
             };
         });
