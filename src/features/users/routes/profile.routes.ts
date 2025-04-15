@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { upload } from '../../../config/multer';
 
 import { getProfile, updateProfile } from '../controllers/profile.controller';
 import {
@@ -9,11 +8,12 @@ import {
     getFollowers,
 } from '../controllers/follow.controller';
 import { validateUserId } from '../middlewares/user.middleware';
+import { fileCleanUp } from '../../../shared/middlewares/multipart.middleware';
 
 const router = Router();
 
 // based on req.user
-router.put('/', upload.single('file'), updateProfile); // update profile
+router.put('/', updateProfile, fileCleanUp); // update profile
 
 router.get('/:userId', validateUserId, getProfile); // get user's profile
 

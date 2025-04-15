@@ -2,6 +2,7 @@ import admin from '../../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { URL } from 'url';
 import path from 'path';
+import sharp from 'sharp'; // Add sharp for image processing
 
 class MediaService {
     private bucket;
@@ -22,13 +23,15 @@ class MediaService {
         fileName: string,
         folder: 'profile-pictures' | 'posts'
     ): Promise<string> {
-        const fileType = path.basename(filePath).split('.').pop();
-        const storagePath = `${folder}/${uuidv4()}-${fileName}.${fileType}`;
+        const storagePath = `${folder}/${uuidv4()}-${fileName}.png`; // Force .png extension
         const file = this.bucket.file(storagePath);
 
-        await file.save(filePath, {
+        // Convert the image to PNG format using sharp
+        const convertedBuffer = await sharp(filePath).png().toBuffer();
+
+        await file.save(convertedBuffer, {
             resumable: false,
-            contentType: 'auto',
+            contentType: 'image/png', // Ensure content type is set to image/png
             metadata: {
                 metadata: {
                     firebaseStorageDownloadTokens: uuidv4(),

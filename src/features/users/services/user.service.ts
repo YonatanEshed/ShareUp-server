@@ -23,7 +23,7 @@ class UserService {
         password: string
     ): Promise<User> {
         const user = new User();
-        user.username = username;
+        user.username = username.toLowerCase(); // Normalize username to lowercase
         user.email = email;
         user.password = password;
 
@@ -41,6 +41,24 @@ class UserService {
             .find();
 
         return existingUsers.length > 0;
+    }
+
+    async searchUsers(searchTerm: string): Promise<string[]> {
+        const formattedSearchTerm = searchTerm.trim(); // Remove extra spaceslize search term
+        const endSearchTerm = formattedSearchTerm + '\uf8ff'; // Add a high Unicode character to define the range
+
+        console.log(
+            `Searching for usernames between "${formattedSearchTerm}" and "${endSearchTerm}"`
+        );
+
+        const usersByUsername = await this.userRepository
+            .whereGreaterOrEqualThan('username', formattedSearchTerm)
+            .whereLessThan('username', endSearchTerm)
+            .find();
+
+        console.log('Users found:', usersByUsername);
+
+        return usersByUsername.map((user) => user.id);
     }
 
     getUserProfile(user: User): Profile {

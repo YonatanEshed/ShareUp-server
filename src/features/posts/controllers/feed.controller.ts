@@ -34,13 +34,9 @@ export const getLatestPostsFromFollowing = async (
             });
         }
 
-        console.log('got here 1');
-
         const posts = await postService.getLatestPostsFromFollowing(
             followingIds
         );
-
-        console.log('got here 2');
 
         if (posts.length === 0) {
             return res.status(200).json({
@@ -48,8 +44,6 @@ export const getLatestPostsFromFollowing = async (
                 message: "You don't follow didn't upload a post yet",
             });
         }
-
-        console.log('got here 3');
 
         res.status(200).json({
             data: posts,
