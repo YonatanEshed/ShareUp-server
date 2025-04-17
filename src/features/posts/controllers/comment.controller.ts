@@ -33,7 +33,7 @@ export const addComment = async (req: Request, res: Response) => {
                 user: {
                     id: req.user.id,
                     username: user?.username,
-                    profilePictureURL: user?.profilePicture,
+                    profilePicture: user?.profilePicture,
                 },
             },
             message: 'Comment added successfully',
@@ -96,6 +96,13 @@ export const getCommentsByPost = async (req: Request, res: Response) => {
 
         const comments = await commentService.getCommentsByPost(postId);
 
+        if (!comments.length) {
+            return res.status(404).json({
+                data: null,
+                message: 'No comments found for this post.',
+            });
+        }
+
         const commentsWithUserDetails = await Promise.all(
             comments.map(async (comment) => {
                 const { userId, ...commentWithoutUserId } = comment;
@@ -105,7 +112,7 @@ export const getCommentsByPost = async (req: Request, res: Response) => {
                     user: {
                         id: userId,
                         username: user?.username,
-                        profilePictureURL: user?.profilePicture,
+                        profilePicture: user?.profilePicture,
                     },
                 };
             })
