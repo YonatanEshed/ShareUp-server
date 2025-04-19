@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/user.service';
 import MediaService from '../../../shared/services/storage.service';
+import followService from '../services/follow.service';
 
 export const getProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
+        if (!req.user) throw Error('An unexpected error accured');
+
         const user = await UserService.getUserById(userId);
         if (!user)
             return res.status(404).json({
@@ -15,9 +18,13 @@ export const getProfile = async (req: Request, res: Response) => {
 
         const profile = UserService.getUserProfile(user);
 
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile retrieved successfully' });
+        let isFollowed = false;
+        isFollowed = await followService.isFollow(req.user.id, userId);
+
+        return res.status(200).json({
+            data: { ...profile, isFollowed },
+            message: 'Profile retrieved successfully',
+        });
     } catch (error) {
         return res.status(500).json({
             data: null,
