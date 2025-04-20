@@ -23,9 +23,21 @@ export const addComment = async (req: Request, res: Response) => {
             postId,
             content
         );
-        return res
-            .status(201)
-            .json({ data: comment, message: 'Comment added successfully' });
+
+        const user = await userService.getUserById(req.user.id);
+        const { userId, ...commentWithoutUserId } = comment;
+
+        return res.status(201).json({
+            data: {
+                ...commentWithoutUserId,
+                user: {
+                    id: req.user.id,
+                    username: user?.username,
+                    profilePicture: user?.profilePicture,
+                },
+            },
+            message: 'Comment added successfully',
+        });
     } catch (error) {
         res.status(500).json({
             data: null,
@@ -84,15 +96,23 @@ export const getCommentsByPost = async (req: Request, res: Response) => {
 
         const comments = await commentService.getCommentsByPost(postId);
 
+        if (!comments.length) {
+            return res.status(404).json({
+                data: null,
+                message: 'No comments found for this post.',
+            });
+        }
+
         const commentsWithUserDetails = await Promise.all(
             comments.map(async (comment) => {
+                const { userId, ...commentWithoutUserId } = comment;
                 const user = await userService.getUserById(comment.userId);
                 return {
-                    ...comment,
+                    ...commentWithoutUserId,
                     user: {
-                        id: comment.userId,
+                        id: userId,
                         username: user?.username,
-                        profilePictureURL: user?.profilePicture,
+                        profilePicture: user?.profilePicture,
                     },
                 };
             })

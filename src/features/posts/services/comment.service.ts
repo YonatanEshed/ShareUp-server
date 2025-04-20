@@ -35,7 +35,9 @@ class CommentService {
         const comments = await this.CommentRepository.whereEqualTo(
             'postId',
             postId
-        ).find();
+        )
+            .orderByAscending('createdAt') // Ensure comments are ordered by creation date
+            .find();
         return comments;
     }
 

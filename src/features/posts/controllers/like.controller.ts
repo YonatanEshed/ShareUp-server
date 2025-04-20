@@ -25,10 +25,10 @@ export const likePost = async (req: Request, res: Response) => {
                 message: 'You have already liked this post',
             });
 
-        const like = await likeService.likePost(req.user.id, postId);
+        await likeService.likePost(req.user.id, postId);
         return res
             .status(201)
-            .json({ data: like, message: 'Post liked successfully' });
+            .json({ data: null, message: 'Post liked successfully' });
     } catch (error) {
         res.status(500).json({
             data: null,
@@ -55,16 +55,16 @@ export const unlikePost = async (req: Request, res: Response) => {
 
         const success = await likeService.unlikePost(req.user.id, postId);
         if (!success) {
-            return res
-                .status(404)
-                .json({ data: null, message: 'Like not found' });
+            return res.status(400).json({
+                data: null,
+                message: 'Cannot unlike a post you have not liked',
+            });
         }
 
         return res
             .status(200)
             .json({ data: null, message: 'Post unliked successfully' });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             data: null,
             message: 'Server error',

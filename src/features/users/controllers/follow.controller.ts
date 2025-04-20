@@ -28,7 +28,7 @@ export const follow = async (req: Request, res: Response) => {
 
         return res
             .status(201)
-            .json({ data: follow, message: 'Successfully followed the user.' });
+            .json({ data: null, message: 'Successfully followed the user.' });
     } catch (error) {
         return res.status(500).json({
             data: null,
@@ -72,56 +72,6 @@ export const unfollow = async (req: Request, res: Response) => {
 };
 
 export const getFollowing = async (req: Request, res: Response) => {
-    try {
-        if (!req.user) throw Error('An unexpected error accrued');
-
-        const followingIds = await followService.getFollowing(req.user.id);
-        const followingProfiles = await Promise.all(
-            followingIds.map(async (id) => {
-                const user = await UserService.getUserById(id);
-                return user ? UserService.getUserProfile(user) : null;
-            })
-        );
-
-        return res.status(200).json({
-            data: followingProfiles.filter((profile) => profile !== null),
-            message: 'Following retrieved successfully',
-        });
-    } catch (error) {
-        return res.status(500).json({
-            data: null,
-            message: 'Server error',
-            error: (error as Error).message,
-        });
-    }
-};
-
-export const getFollowers = async (req: Request, res: Response) => {
-    try {
-        if (!req.user) throw Error('An unexpected error accrued');
-
-        const followerIds = await followService.getFollowers(req.user.id);
-        const followerProfiles = await Promise.all(
-            followerIds.map(async (id) => {
-                const user = await UserService.getUserById(id);
-                return user ? UserService.getUserProfile(user) : null;
-            })
-        );
-
-        return res.status(200).json({
-            data: followerProfiles.filter((profile) => profile !== null),
-            message: 'Followers retrieved successfully',
-        });
-    } catch (error) {
-        return res.status(500).json({
-            data: null,
-            message: 'Server error',
-            error: (error as Error).message,
-        });
-    }
-};
-
-export const getUserFollowing = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
@@ -146,7 +96,7 @@ export const getUserFollowing = async (req: Request, res: Response) => {
     }
 };
 
-export const getUserFollowers = async (req: Request, res: Response) => {
+export const getFollowers = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {

@@ -1,28 +1,14 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/user.service';
 import MediaService from '../../../shared/services/storage.service';
-
-export const getOwnProfile = async (req: Request, res: Response) => {
-    try {
-        if (!req.user) throw Error('An unexpected error accrued');
-        const profile = UserService.getUserProfile(req.user);
-
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile retrieved successfully' });
-    } catch (error) {
-        return res.status(500).json({
-            data: null,
-            message: 'Server error',
-            error: (error as Error).message,
-        });
-    }
-};
+import followService from '../services/follow.service';
 
 export const getProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
+        if (!req.user) throw Error('An unexpected error accured');
+
         const user = await UserService.getUserById(userId);
         if (!user)
             return res.status(404).json({
@@ -32,9 +18,13 @@ export const getProfile = async (req: Request, res: Response) => {
 
         const profile = UserService.getUserProfile(user);
 
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile retrieved successfully' });
+        let isFollowed = false;
+        isFollowed = await followService.isFollow(req.user.id, userId);
+
+        return res.status(200).json({
+            data: { ...profile, isFollowed },
+            message: 'Profile retrieved successfully',
+        });
     } catch (error) {
         return res.status(500).json({
             data: null,
@@ -44,17 +34,23 @@ export const getProfile = async (req: Request, res: Response) => {
     }
 };
 
-export const updateProfile = async (req: Request, res: Response) => {
+export const updateProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     const { username, bio } = req.body;
 
     try {
-        if (!username && !bio)
-            return res.status(400).json({
+        if (!username && !bio) {
+            res.status(400).json({
                 data: null,
                 message: "Missing required fields: 'username', 'bio'.",
             });
+            return next();
+        }
 
-        if (!req.user) throw Error('An unexpected error accrued');
+        if (!req.user) throw Error('An unexpected error occurred');
 
         let updateData;
 
@@ -84,19 +80,22 @@ export const updateProfile = async (req: Request, res: Response) => {
         const updatedUser = await UserService.updateUser(req.user, updateData);
         if (!updatedUser)
             throw Error(
-                "Failed to update the user's profile. Please try again later.Failed to update the user's profile. Please try again later."
+                "Failed to update the user's profile. Please try again later."
             );
 
         const profile = await UserService.getUserProfile(updatedUser);
 
-        return res
-            .status(200)
-            .json({ data: profile, message: 'Profile updated successfully' });
+        res.status(200).json({
+            data: profile,
+            message: 'Profile updated successfully',
+        });
+        return next();
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             data: null,
             message: 'Server error',
             error: (error as Error).message,
         });
+        return next();
     }
 };
