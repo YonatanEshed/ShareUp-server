@@ -28,7 +28,7 @@ export const likePost = async (req: Request, res: Response) => {
         await likeService.likePost(req.user.id, postId);
         return res
             .status(201)
-            .json({ data: true, message: 'Post liked successfully' });
+            .json({ data: null, message: 'Post liked successfully' });
     } catch (error) {
         res.status(500).json({
             data: null,
@@ -63,7 +63,7 @@ export const unlikePost = async (req: Request, res: Response) => {
 
         return res
             .status(200)
-            .json({ data: true, message: 'Post unliked successfully' });
+            .json({ data: null, message: 'Post unliked successfully' });
     } catch (error) {
         res.status(500).json({
             data: null,

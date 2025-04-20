@@ -41,6 +41,6 @@ router.get('/:postId/likes', getLikesByPostId);
 
 router.post('/:postId/comment', addComment);
 router.delete('/:postId/comment/:commentId', deleteComment);
-router.get('/:postId/comments', getCommentsByPost);
+router.get('/:postId/comment', getCommentsByPost);
 
 export default router;
