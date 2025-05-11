@@ -58,7 +58,7 @@ class UserService {
     }
 
     getUserProfile(user: User): Profile {
-        const { email, password, ...profile } = user;
+        const { email, password, fcmToken, ...profile } = user;
 
         // Capitalize username
         profile.username = capitalizeWords(profile.username);
