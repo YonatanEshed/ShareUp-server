@@ -1,5 +1,6 @@
 import { getRepository } from 'fireorm';
 import User, { Profile } from '../models/user.model';
+import { capitalizeWords } from '../../../shared/utils/string.util';
 
 class UserService {
     private userRepository = getRepository(User);
@@ -32,6 +33,7 @@ class UserService {
 
     async updateUser(user: User, updates: Partial<User>): Promise<User | null> {
         Object.assign(user, updates);
+        user.username = user.username.toLowerCase(); // Normalize username to lowercase
         return await this.userRepository.update(user);
     }
 
@@ -47,22 +49,19 @@ class UserService {
         const formattedSearchTerm = searchTerm.trim(); // Remove extra spaceslize search term
         const endSearchTerm = formattedSearchTerm + '\uf8ff'; // Add a high Unicode character to define the range
 
-        console.log(
-            `Searching for usernames between "${formattedSearchTerm}" and "${endSearchTerm}"`
-        );
-
         const usersByUsername = await this.userRepository
             .whereGreaterOrEqualThan('username', formattedSearchTerm)
             .whereLessThan('username', endSearchTerm)
             .find();
-
-        console.log('Users found:', usersByUsername);
 
         return usersByUsername.map((user) => user.id);
     }
 
     getUserProfile(user: User): Profile {
         const { email, password, ...profile } = user;
+
+        // Capitalize username
+        profile.username = capitalizeWords(profile.username);
         return profile;
     }
 }

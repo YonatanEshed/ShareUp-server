@@ -30,7 +30,7 @@ router.get('/feed', getLatestPosts);
 router.get('/feed/following', getLatestPostsFromFollowing);
 
 router.get('/:postId', getPost);
-router.patch('/:postId', updatePost);
+router.put('/:postId', updatePost);
 router.delete('/:postId', deletePost);
 
 router.get('/user/:userId', getPostsByUser);

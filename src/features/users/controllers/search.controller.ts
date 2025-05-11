@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
+import { profile } from 'console';
 
 export const searchUsers = async (req: Request, res: Response) => {
     const { q } = req.query;
@@ -11,14 +12,11 @@ export const searchUsers = async (req: Request, res: Response) => {
             });
         }
 
-        console.log(q);
-
-        const userIds = await UserService.searchUsers(q);
-        console.log(userIds);
+        const userIds = await UserService.searchUsers(q.toLowerCase());
         const profiles = await Promise.all(
             userIds.map(async (id) => {
                 const user = await UserService.getUserById(id);
-                user ? UserService.getUserProfile(user) : null;
+                return user ? UserService.getUserProfile(user) : null;
             })
         );
 
