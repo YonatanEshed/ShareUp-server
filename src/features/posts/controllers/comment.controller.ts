@@ -24,7 +24,6 @@ export const addComment = async (req: Request, res: Response) => {
             content
         );
 
-        const user = await userService.getUserById(req.user.id);
         const { userId, ...commentWithoutUserId } = comment;
 
         return res.status(201).json({
@@ -32,8 +31,8 @@ export const addComment = async (req: Request, res: Response) => {
                 ...commentWithoutUserId,
                 user: {
                     id: req.user.id,
-                    username: user?.username,
-                    profilePicture: user?.profilePicture,
+                    username: req.user.username,
+                    profilePicture: req.user.profilePicture,
                 },
             },
             message: 'Comment added successfully',
