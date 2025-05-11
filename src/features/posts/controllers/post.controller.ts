@@ -4,6 +4,10 @@ import MediaService from '../../../shared/services/storage.service';
 import postService from '../services/post.service';
 import userService from '../../../features/users/services/user.service';
 import likeService from '../services/like.service';
+import notificationService from '@/features/notifications/services/notification.service';
+import followService from '@/features/users/services/follow.service';
+import { activityType } from '@/features/notifications/models/activity.model';
+import User from '@/features/users/models/user.model';
 
 export const uploadPost = async (
     req: Request,
@@ -42,6 +46,24 @@ export const uploadPost = async (
 
         const user = await userService.getUserById(post.userId);
         const { userId, ...postWithoutUserId } = post; // Exclude userId
+
+        const followerIds = await followService.getFollowers(userId);
+        let followers = await Promise.all(
+            followerIds.map(async (id) => {
+                const user = await userService.getUserById(id);
+                return user;
+            })
+        );
+
+        followers = followers.filter((user) => user !== null);
+
+        notificationService.sendNotificationToMultiple(
+            req.user,
+            followers as User[],
+            activityType.post,
+            `${req.user.username} uploaded a new post`
+        );
+
         res.status(200).json({
             data: {
                 ...postWithoutUserId,

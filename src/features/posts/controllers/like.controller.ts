@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import likeService from '../services/like.service';
 import postService from '../services/post.service';
 import userService from '../../../features/users/services/user.service';
+import notificationService from '../../../features/notifications/services/notification.service';
+import { activityType } from '../../../features/notifications/models/activity.model';
 
 export const likePost = async (req: Request, res: Response) => {
     const { postId } = req.params;
@@ -26,6 +28,17 @@ export const likePost = async (req: Request, res: Response) => {
             });
 
         await likeService.likePost(req.user.id, postId);
+
+        const postOwner = await userService.getUserById(post.userId);
+        if (!postOwner) throw Error('An unexpected error occurred');
+
+        notificationService.sendNotification(
+            req.user,
+            postOwner,
+            activityType.comment,
+            `${req.user.username} commented on your post`
+        );
+
         return res
             .status(201)
             .json({ data: null, message: 'Post liked successfully' });
