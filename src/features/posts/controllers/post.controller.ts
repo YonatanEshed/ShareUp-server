@@ -4,10 +4,10 @@ import MediaService from '../../../shared/services/storage.service';
 import postService from '../services/post.service';
 import userService from '../../../features/users/services/user.service';
 import likeService from '../services/like.service';
-import notificationService from '@/features/notifications/services/notification.service';
-import followService from '@/features/users/services/follow.service';
-import { activityType } from '@/features/notifications/models/activity.model';
-import User from '@/features/users/models/user.model';
+import notificationService from '../../../features/notifications/services/notification.service';
+import followService from '../../../features/users/services/follow.service';
+import { activityType } from '../../../features/notifications/models/activity.model';
+import User from '../../../features/users/models/user.model';
 
 export const uploadPost = async (
     req: Request,
