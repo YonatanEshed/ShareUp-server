@@ -19,15 +19,20 @@ class NotificationService {
         body: string
     ): Promise<void> {
         activityService.logActivity(reciver.id, sender.id, type, body);
-
+        console.log('fcmToken: ' + reciver.fcmToken);
         // skip sending notification if user don't have FCM token
         if (reciver.fcmToken === '') return;
 
+        const title = this.generateNotificationTitle(type);
         const payload = {
             token: reciver.fcmToken,
             notification: {
-                sender: userService.getUserProfile(sender),
-                type,
+                title,
+                body,
+            },
+            data: {
+                sender: JSON.stringify(userService.getUserProfile(sender)),
+                type: type.toString(),
                 body,
             },
         };
@@ -53,6 +58,7 @@ class NotificationService {
         type: activityType,
         body: string
     ): Promise<void> {
+        const title = this.generateNotificationTitle(type);
         const messages = receivers
             .map((receiver) => {
                 activityService.logActivity(receiver.id, sender.id, type, body);
@@ -62,8 +68,14 @@ class NotificationService {
                 return {
                     token: receiver.fcmToken,
                     notification: {
-                        sender: userService.getUserProfile(sender),
-                        type,
+                        title,
+                        body,
+                    },
+                    data: {
+                        sender: JSON.stringify(
+                            userService.getUserProfile(sender)
+                        ),
+                        type: type.toString(),
                         body,
                     },
                 };
@@ -77,6 +89,26 @@ class NotificationService {
             console.log(`${responses.length} notifications sent successfully`);
         } catch (error) {
             console.error('Error sending notifications:', error);
+        }
+    }
+
+    /**
+     * Generates a notification title based on the activity type.
+     * @param type - The type of activity.
+     * @returns The generated notification title.
+     */
+    private generateNotificationTitle(type: activityType): string {
+        switch (type) {
+            case activityType.like:
+                return 'You have a new like!';
+            case activityType.comment:
+                return 'Someone commented on your post!';
+            case activityType.follow:
+                return 'You have a new follower!';
+            case activityType.post:
+                return 'Someone you follow uploaded a new post!';
+            default:
+                return 'You have a new notification!';
         }
     }
 }

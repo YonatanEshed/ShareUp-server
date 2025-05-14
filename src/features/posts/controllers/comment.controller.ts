@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import commentService from '../services/comment.service';
 import postService from '../services/post.service';
 import userService from '../../../features/users/services/user.service';
+import notificationService from '../../../features/notifications/services/notification.service';
+import { activityType } from '../../../features/notifications/models/activity.model';
 
 export const addComment = async (req: Request, res: Response) => {
     const { postId } = req.params;
@@ -24,7 +26,16 @@ export const addComment = async (req: Request, res: Response) => {
             content
         );
 
-        const user = await userService.getUserById(req.user.id);
+        const postOwner = await userService.getUserById(post.userId);
+        if (!postOwner) throw Error('An unexpected error occurred');
+
+        notificationService.sendNotification(
+            req.user,
+            postOwner,
+            activityType.comment,
+            `${req.user.username} commented on your post`
+        );
+
         const { userId, ...commentWithoutUserId } = comment;
 
         return res.status(201).json({
@@ -32,8 +43,8 @@ export const addComment = async (req: Request, res: Response) => {
                 ...commentWithoutUserId,
                 user: {
                     id: req.user.id,
-                    username: user?.username,
-                    profilePicture: user?.profilePicture,
+                    username: req.user.username,
+                    profilePicture: req.user.profilePicture,
                 },
             },
             message: 'Comment added successfully',

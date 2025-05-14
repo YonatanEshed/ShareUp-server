@@ -1,12 +1,23 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
 import followService from '../services/follow.service';
+import notificationService from '../../../features/notifications/services/notification.service';
+import userService from '../services/user.service';
+import { activityType } from '../../../features/notifications/models/activity.model';
 
 export const follow = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
         if (!req.user) throw Error('An unexpected error accrued');
+
+        const followed = await userService.getUserById(userId);
+
+        if (!followed)
+            return res.status(404).json({
+                data: null,
+                message: 'No such user with id: ' + userId,
+            });
 
         if (req.user.id === userId)
             return res
@@ -25,6 +36,13 @@ export const follow = async (req: Request, res: Response) => {
 
         const follow = await followService.createFollow(req.user.id, userId);
         if (!follow) throw Error('Could not perform follow');
+
+        notificationService.sendNotification(
+            req.user,
+            followed,
+            activityType.follow,
+            `${req.user.username} started following you`
+        );
 
         return res
             .status(201)
