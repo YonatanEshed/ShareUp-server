@@ -35,8 +35,8 @@ export const likePost = async (req: Request, res: Response) => {
         notificationService.sendNotification(
             req.user,
             postOwner,
-            activityType.comment,
-            `${req.user.username} commented on your post`
+            activityType.like,
+            `${req.user.username} liked your post!`
         );
 
         return res
